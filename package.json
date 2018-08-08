@@ -1,0 +1,24 @@
+{
+    "name": "marcos.me",
+    "version": "2.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "devDependencies": {
+        "css-loader": "^1.0.0",
+        "html-webpack-plugin": "^3.2.0",
+        "node-sass": "^4.9.2",
+        "sass-loader": "^7.1.0",
+        "style-loader": "^0.21.0",
+        "webpack": "^4.16.3",
+        "webpack-cli": "^3.1.0",
+        "webpack-dev-server": "^3.1.5"
+    },
+    "scripts": {
+        "start": "webpack-dev-server --open --mode development --hot --colors --inline --host 0.0.0.0",
+        "build": "webpack -p --mode production"
+    },
+    "dependencies": {
+        "normalize.css": "^8.0.0",
+        "particles.js": "^2.0.0"
+    }
+}
