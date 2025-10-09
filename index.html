@@ -22,7 +22,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/styles.css">
 
@@ -33,35 +33,61 @@
 
 <body>
     <div class="bg-gradient"></div>
-
     <div class="grid-overlay"></div>
 
     <div class="brutal-container">
-        <div class="profile-brutal">
-            <div class="profile-img">
-                <img src="assets/images/profile.jpg" alt="Marcos Castaneda">
+        <!-- Left Column: Profile -->
+        <div class="profile-section">
+            <div class="profile-brutal">
+                <div class="profile-img">
+                    <img src="assets/images/profile.jpg" alt="Marcos Castaneda">
+                </div>
+
+                <h1 class="brutal-name">
+                    MARCOS<br>
+                    CASTANEDA
+                </h1>
+
+                <p class="brutal-title">Senior Software Engineer</p>
+
+                <div class="brutal-divider"></div>
             </div>
 
-            <h1 class="brutal-name">
-                MARCOS<br>
-                CASTANEDA
-            </h1>
+            <div class="brutal-links">
+                <a href="https://www.linkedin.com/in/mcasta" target="_blank" class="brutal-btn">
+                    LinkedIn
+                </a>
 
-            <p class="brutal-title">Senior Software Engineer</p>
-
-            <div class="brutal-divider"></div>
+                <a href="https://github.com/marcoss" target="_blank" class="brutal-btn primary">
+                    GitHub
+                </a>
+            </div>
         </div>
 
-        <div class="brutal-links">
-            <a href="https://www.linkedin.com/in/mcasta" target="_blank" class="brutal-btn">
-                LinkedIn
-            </a>
+        <!-- Right Column: Chat -->
+        <div class="chat-section">
+            <div class="chat-header">
+                <h2 class="chat-title">💬 MARCOS'S AI AGENT</h2>
+                <p class="chat-subtitle">Powered by a 2B LLM trained on my resume and expertise!</p>
+                <div class="brutal-divider"></div>
+            </div>
 
-            <a href="https://github.com/marcoss" target="_blank" class="brutal-btn primary">
-                GitHub
-            </a>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-welcome">
+                    <p>Ask me anything about my skills, experience, or projects!</p>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" class="chat-input" placeholder="" maxlength="100" />
+                <button id="sendBtn" class="chat-send-btn">
+                    SEND
+                </button>
+            </div>
         </div>
     </div>
+
+    <script src="js/chat.js"></script>
 </body>
 
 </html>
