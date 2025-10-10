@@ -19,7 +19,14 @@
 
 html, body {
     height: 100%;
+    height: 100dvh;
+    /* Dynamic viewport height for mobile keyboard */
     overflow-x: hidden;
+}
+
+html {
+    scroll-behavior: auto;
+    /* No smooth scroll on initial load */
 }
 
 body {
@@ -32,6 +39,8 @@ body {
     padding: 1.5rem;
     position: relative;
     overflow-y: auto;
+    scroll-behavior: auto;
+    /* Prevent smooth scroll jump */
 }
 
 /* Animated gradient background */
@@ -41,6 +50,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(88, 86, 214, 0.3), transparent 50%),
         radial-gradient(circle at 40% 20%, rgba(72, 52, 212, 0.2), transparent 50%),
@@ -66,6 +76,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     opacity: 0.03;
     pointer-events: none;
@@ -82,6 +93,8 @@ body {
     position: relative;
     z-index: 10;
     align-items: start;
+    scroll-margin-top: 0;
+    /* Prevent auto-scroll */
 }
 
 /* Glass effect */
@@ -165,7 +178,7 @@ body {
 }
 
 .profile-name {
-    font-size: 1.75rem;
+    font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
     background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
@@ -175,10 +188,10 @@ body {
 }
 
 .profile-title {
-    font-size: 0.95rem;
+    font-size: 1.0rem;
     font-weight: 500;
     color: var(--text-secondary);
-    letter-spacing: 0.5px;
+    /* letter-spacing: 0.5px; */
 }
 
 /* Social Links */
@@ -212,6 +225,8 @@ body {
     flex-direction: column;
     height: 600px;
     max-height: 80vh;
+    max-height: 80dvh;
+    /* Dynamic viewport height for mobile keyboard */
     animation: fadeInUp 0.6s ease-out 0.1s backwards;
 }
 
@@ -289,7 +304,7 @@ body {
 .welcome-icon {
     font-size: 3rem;
     margin-bottom: 1rem;
-    opacity: 0.5;
+    /* opacity: 0.8; */
 }
 
 .chat-welcome p {
@@ -353,13 +368,21 @@ body {
     font-weight: 500;
 }
 
-/* Chat Input */
+/* Chat Input Area */
+.chat-input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    /* Reduced gap between input and disclaimer */
+}
+
 .chat-input-wrapper {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     padding: 1rem 1.25rem;
-    margin: 1rem;
+    margin: 1rem 1rem 0.5rem;
+    /* Reduced bottom margin */
     border-radius: 16px;
 }
 
@@ -369,7 +392,8 @@ body {
     border: none;
     outline: none;
     color: var(--text-primary);
-    font-size: 0.95rem;
+    font-size: 16px;
+    /* Must be 16px or larger to prevent iOS zoom */
     font-family: 'Inter', sans-serif;
     font-weight: 500;
 }
@@ -447,6 +471,16 @@ body {
     transform: none;
 }
 
+/* Disclaimer text */
+.chat-disclaimer {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    text-align: center;
+    padding: 0 1rem 1rem;
+    /* Bottom padding for space below */
+    opacity: 0.7;
+}
+
 /* Responsive Design */
 @media (max-width: 968px) {
     body {
@@ -468,6 +502,7 @@ body {
     .chat-card {
         height: 500px;
         max-height: 70vh;
+        max-height: 70dvh;
     }
 
     .message {
@@ -475,9 +510,12 @@ body {
     }
 }
 
+/* Mobile specific fixes */
 @media (max-width: 640px) {
     body {
         padding: 0.75rem;
+        align-items: flex-start;
+        /* Start from top on mobile */
     }
 
     .profile-card {
@@ -497,6 +535,7 @@ body {
     .chat-card {
         border-radius: 20px;
         height: 450px;
+        max-height: 65dvh;
     }
 
     .chat-header {
@@ -513,7 +552,12 @@ body {
 
     .chat-input-wrapper {
         padding: 0.875rem 1rem;
-        margin: 0.75rem;
+        margin: 0.75rem 0.75rem 0.5rem;
+    }
+
+    .chat-input {
+        font-size: 16px;
+        /* Prevent zoom on iOS */
     }
 
     .message {
@@ -525,12 +569,29 @@ body {
         padding: 0.875rem 1rem;
         font-size: 0.9rem;
     }
+
+    .chat-disclaimer {
+        padding: 0 0.75rem 0.75rem;
+        font-size: 0.7rem;
+        /* Slightly smaller on mobile */
+    }
 }
 
 /* iOS specific fixes */
 @supports (-webkit-touch-callout: none) {
-    body {
-        min-height: 100vh;
-        min-height: -webkit-fill-available;
+    html, body {
+        height: 100vh;
+        height: -webkit-fill-available;
+    }
+
+    .bg-gradient,
+    .grain-overlay {
+        height: 100vh;
+        height: -webkit-fill-available;
+    }
+
+    .chat-card {
+        max-height: 80vh;
+        max-height: -webkit-fill-available;
     }
 }

@@ -4,6 +4,44 @@ const sendBtn = document.getElementById('sendBtn');
 
 let isLoading = false;
 
+// Layer 1 (not really that secure at all, but blocks most feeble attempts)
+const SIGNING_KEY = 'e49cf0dc-35da-4eb6-abd0-6d81ef9ae5c8';
+
+// Function to generate HMAC signature
+async function signRequest(data) {
+    const timestamp = Date.now().toString();
+    const nonce = Math.random().toString(36).substring(7);
+
+    // Create canonical string (order matters - must match backend!)
+    const canonicalString = `${data.question}|${timestamp}|${nonce}`;
+
+    // Sign with HMAC-SHA256 using Web Crypto API
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(SIGNING_KEY);
+    const messageData = encoder.encode(canonicalString);
+
+    const key = await crypto.subtle.importKey(
+        'raw',
+        keyData,
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+    );
+
+    const signature = await crypto.subtle.sign('HMAC', key, messageData);
+
+    // Convert signature to hex string
+    const signatureHex = Array.from(new Uint8Array(signature))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+
+    return {
+        signature: signatureHex,
+        timestamp,
+        nonce
+    };
+}
+
 // Send message on button click
 sendBtn.addEventListener('click', sendMessage);
 
@@ -34,13 +72,19 @@ async function sendMessage() {
     // Show loading state
     isLoading = true;
     sendBtn.disabled = true;
-    const loadingMsg = addMessage('Thinking... (This may take a few seconds)', 'loading');
+    const loadingMsg = addMessage('Thinking...', 'loading');
 
     try {
+        // Generate signature for this request
+        const { signature, timestamp, nonce } = await signRequest({ question });
+
         const response = await fetch('https://api.marcos.me/v1/query', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-Signature': signature,
+                'X-Timestamp': timestamp,
+                'X-Nonce': nonce,
             },
             body: JSON.stringify({ question }),
         });
