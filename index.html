@@ -1,114 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0a0a0a">
-
-    <meta name="description" content="Marcos Castaneda - Senior Software Engineer + AI Chatbot">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Marcos Castaneda - Senior Software Engineer">
     <meta name="author" content="Marcos Castaneda">
-
-    <meta property="og:title" content="Marcos Castaneda | Software Engineer">
-    <meta property="og:description" content="Senior Software Engineer - Portfolio with AI Chatbot">
-    <meta property="og:image" content="assets/images/profile.jpg">
-    <meta property="og:type" content="website">
-
-    <title>Marcos Castaneda | Software Engineer</title>
-
+    <title>Marcos Castaneda | Senior Software Engineer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/styles.css">
 
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
 </head>
 
-<body>
-    <div class="bg-gradient"></div>
-    <div class="grain-overlay"></div>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 p-4 sm:p-6 md:p-12">
+    <div class="max-w-2xl mx-auto space-y-8 fade-in">
+        <header>
+            <h1 class="text-4xl sm:text-5xl md:text-5xl font-bold mb-3">Marcos Castaneda</h1>
+            <p class="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 mb-4">Senior Software Engineer</p>
+            <p class="text-base sm:text-lg text-gray-500 dark:text-gray-500 mb-5 leading-relaxed">
+                Experienced Google/AWS engineer building scalable web applications, secure backend APIs and distributed
+                systems.
+            </p>
 
-    <div class="container">
-        <!-- Profile Card -->
-        <div class="profile-card glass">
-            <div class="profile-header">
-                <div class="profile-img-wrapper">
-                    <img src="assets/images/profile.jpg" alt="Marcos Castaneda" class="profile-img">
-                    <!-- <div class="status-indicator"></div> -->
-                </div>
-
-                <h1 class="profile-name">Marcos Castaneda</h1>
-                <p class="profile-title">Senior Software Engineer</p>
-            </div>
-
-            <div class="social-links">
-                <a href="https://www.linkedin.com/in/mcasta" target="_blank" class="social-btn glass-hover">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                        <rect x="2" y="9" width="4" height="12"></rect>
-                        <circle cx="4" cy="4" r="2"></circle>
-                    </svg>
+            <div class="flex gap-4 text-base sm:text-lg">
+                <a href="https://www.linkedin.com/in/mcasta" target="_blank"
+                    class="font-medium text-gray-900 dark:text-gray-100 hover:underline">
                     LinkedIn
                 </a>
-
-                <a href="https://github.com/marcoss" target="_blank" class="social-btn glass-hover">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path
-                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-                        </path>
-                    </svg>
+                <span class="text-gray-400">•</span>
+                <a href="https://github.com/marcoss" target="_blank"
+                    class="font-medium text-gray-900 dark:text-gray-100 hover:underline">
                     GitHub
                 </a>
             </div>
-        </div>
+        </header>
 
-        <!-- Chat Card -->
-        <div class="chat-card glass">
-            <div class="chat-header">
-                <div class="chat-header-content">
-                    <h2 class="chat-title">💬 Ask about Marcos</h2>
-                    <p class="chat-subtitle">
-                        <span class="ai-badge">AI Bot</span>
-                        <!-- Trained on my portfolio and experience. -->
-                    </p>
+        <hr class="border-gray-300 dark:border-gray-700">
+
+        <section>
+            <h2 class="text-xl sm:text-2xl font-semibold mb-5">AI Assistant</h2>
+
+            <div id="chatMessages"
+                class="space-y-4 mb-5 max-h-[500px] overflow-y-auto p-4 border border-gray-200 dark:border-gray-800 rounded">
+                <div class="text-base sm:text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+                    👋 Hi! I'm an AI built and trained by Marcos on his resume and experience. Ask me anything about
+                    his skills,
+                    projects,
+                    or work history.
                 </div>
             </div>
 
-            <div class="chat-messages" id="chatMessages">
-                <div class="chat-welcome">
-                    <div class="welcome-icon">⚡️</div>
-                    <p>I built, trained and deployed this AI agent on my resume and technical expertise.<br><br>Ask
-                        about my
-                        skills,
-                        experience,
-                        or
-                        projects!</p>
-                </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <input type="text" id="chatInput" placeholder="Ask about experience, skills, or projects..."
+                    maxlength="100"
+                    class="chat-input flex-1 px-4 py-3 text-base sm:text-lg border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-black text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100" />
+                <button id="sendBtn"
+                    class="px-6 py-3 text-base sm:text-lg font-medium bg-gray-900 dark:bg-gray-100 text-white dark:text-black rounded hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap">
+                    Send
+                </button>
             </div>
 
-            <div class="chat-input-area">
-                <div class="chat-input-wrapper glass">
-                    <input type="text" id="chatInput" class="chat-input" placeholder="" maxlength="100" />
-                    <button id="sendBtn" class="send-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                    </button>
-                </div>
-                <p class="chat-disclaimer">Responses may take several seconds. AI may provide inaccurate information.
-                </p>
-            </div>
-        </div>
+            <p class="text-xs sm:text-sm text-gray-400 dark:text-gray-600 mt-5 text-center">
+                Responses may take a few seconds. AI may provide inaccurate information.
+            </p>
+        </section>
     </div>
-
     <script src="js/chat.js"></script>
 </body>
 
