@@ -24,9 +24,24 @@ chatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && !isLoading) sendMessage();
 });
 
+function sanitizeQuestion(text) {
+    return text
+        .replace(/[^\x20-\x7E]/g, '')   // Remove non-ASCII
+        .replace(/\s+/g, ' ')           // Collapse whitespace
+        .trim();
+}
+
 async function sendMessage() {
-    const question = chatInput.value.trim();
-    if (!question || isLoading) return;
+    const rawQuestion = chatInput.value.trim();
+    if (!rawQuestion || isLoading) return;
+
+    // Sanitize before signing
+    const question = sanitizeQuestion(rawQuestion);
+
+    if (!question) {
+        addMessage('Please enter a valid question.', 'error');
+        return;
+    }
 
     addMessage(question, 'user');
     chatInput.value = '';
@@ -49,18 +64,20 @@ async function sendMessage() {
             body: JSON.stringify({ question }),
         });
 
-        const data = await response.json();
         loadingMsg.remove();
 
         if (!response.ok) {
+            const data = await response.json();
             addMessage(formatErrorMessage(data), 'error');
             return;
         }
 
+        const data = await response.json();
         addMessage(data.answer, 'ai');
+
     } catch (error) {
         loadingMsg.remove();
-        addMessage('Connection error. Please try again.', 'error');
+        addMessage('Connection error. Please check your internet and try again.', 'error');
         console.error('Chat error:', error);
     } finally {
         isLoading = false;
@@ -70,11 +87,11 @@ async function sendMessage() {
 }
 
 function formatErrorMessage(errorData) {
-    if (errorData.error && errorData.details && errorData.details.length > 0) {
-        const detail = errorData.details[0];
-        if (detail.msg) return detail.msg;
+    if (errorData.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+        const error = errorData.errors[0];
+        return error.detail || error.title || 'An error occurred';
     }
-    if (errorData.error) return `Error: ${errorData.error}`;
+
     return 'Something went wrong. Please try again.';
 }
 
