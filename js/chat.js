@@ -80,7 +80,7 @@ function formatErrorMessage(errorData) {
 
 function addMessage(text, type) {
     const messageDiv = document.createElement('div');
-    messageDiv.className = 'message text-base sm:text-lg leading-relaxed';
+    messageDiv.className = 'message text-base sm:text-base leading-relaxed';
 
     if (type === 'user') {
         messageDiv.className += ' font-medium text-gray-900 dark:text-gray-100';
