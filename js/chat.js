@@ -87,7 +87,7 @@ function addMessage(text, type) {
         messageDiv.innerHTML = `<strong>You:</strong> ${escapeHtml(text)}`;
     } else if (type === 'ai') {
         messageDiv.className += ' text-gray-700 dark:text-gray-300';
-        messageDiv.innerHTML = `<strong>AI:</strong> ${escapeHtml(text)}`;
+        messageDiv.innerHTML = `<strong>Assistant:</strong> ${escapeHtml(text)}`;
     } else if (type === 'loading') {
         messageDiv.className += ' text-gray-500 dark:text-gray-500 italic';
         messageDiv.textContent = text;
