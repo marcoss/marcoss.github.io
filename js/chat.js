@@ -1,6 +1,8 @@
 const chatMessages = document.getElementById('chatMessages');
 const chatInput = document.getElementById('chatInput');
 const sendBtn = document.getElementById('sendBtn');
+const supportsSSE = typeof EventSource !== 'undefined';
+
 let isLoading = false;
 
 async function signRequest(data) {
@@ -26,8 +28,8 @@ chatInput.addEventListener('keypress', (e) => {
 
 function sanitizeQuestion(text) {
     return text
-        .replace(/[^\x20-\x7E]/g, '')   // Remove non-ASCII
-        .replace(/\s+/g, ' ')           // Collapse whitespace
+        .replace(/[^\x20-\x7E]/g, '')
+        .replace(/\s+/g, ' ')
         .trim();
 }
 
@@ -35,7 +37,6 @@ async function sendMessage() {
     const rawQuestion = chatInput.value.trim();
     if (!rawQuestion || isLoading) return;
 
-    // Sanitize before signing
     const question = sanitizeQuestion(rawQuestion);
 
     if (!question) {
@@ -50,9 +51,11 @@ async function sendMessage() {
     sendBtn.disabled = true;
 
     const loadingMsg = addMessage('Thinking...', 'loading');
+    let aiMessageDiv = null;
 
     try {
         const { signature, timestamp, nonce } = await signRequest({ question });
+
         const response = await fetch('https://api.marcos.me/v1/chat', {
             method: 'POST',
             headers: {
@@ -61,19 +64,31 @@ async function sendMessage() {
                 'X-Timestamp': timestamp,
                 'X-Nonce': nonce,
             },
-            body: JSON.stringify({ question }),
+            body: JSON.stringify({
+                question,
+                stream: supportsSSE
+            })
         });
-
-        loadingMsg.remove();
 
         if (!response.ok) {
             const data = await response.json();
+            loadingMsg.remove();
             addMessage(formatErrorMessage(data), 'error');
             return;
         }
 
-        const data = await response.json();
-        addMessage(data.answer, 'ai');
+        const contentType = response.headers.get('content-type');
+
+        if (contentType && contentType.includes('text/event-stream')) {
+            await handleStreamingResponse(response, loadingMsg, (answer, messageDiv) => {
+                aiMessageDiv = messageDiv;
+            });
+        } else {
+            // Fallback to non-streaming response
+            const data = await response.json();
+            loadingMsg.remove();
+            addMessage(data.answer, 'ai');
+        }
 
     } catch (error) {
         loadingMsg.remove();
@@ -83,6 +98,78 @@ async function sendMessage() {
         isLoading = false;
         sendBtn.disabled = false;
         chatInput.focus();
+    }
+}
+
+async function handleStreamingResponse(response, loadingMsg, onAnswer) {
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let answer = '';
+    let aiMessageDiv = null;
+    let firstChunkReceived = false;
+
+    try {
+        while (true) {
+            const { done, value } = await reader.read();
+
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                    const data = line.slice(6);
+
+                    if (data) {
+                        try {
+                            const parsed = JSON.parse(data);
+
+                            if (parsed.content) {
+                                if (!firstChunkReceived) {
+                                    loadingMsg.remove();
+                                    aiMessageDiv = addMessage('', 'ai');
+                                    aiMessageDiv.classList.add('streaming');
+                                    firstChunkReceived = true;
+                                }
+
+                                answer += parsed.content;
+                                updateMessage(aiMessageDiv, answer, 'ai');
+                                onAnswer(answer, aiMessageDiv);
+                            }
+
+                            if (parsed.chunks !== undefined) {
+                                console.log(`Retrieved ${parsed.chunks} chunks in ${parsed.retrievalTime}ms`);
+                            }
+                        } catch (e) {
+                            // Ignore
+                        }
+                    }
+                } else if (line.startsWith('event: ')) {
+                    const eventType = line.slice(7);
+
+                    if (eventType === 'done') {
+                        console.log('Stream completed');
+                        if (aiMessageDiv) {
+                            aiMessageDiv.classList.remove('streaming');
+                        }
+                    } else if (eventType === 'error') {
+                        throw new Error('Server error during streaming');
+                    }
+                }
+            }
+        }
+    } finally {
+        reader.releaseLock();
+        if (aiMessageDiv) {
+            aiMessageDiv.classList.remove('streaming');
+        }
+        if (!firstChunkReceived && loadingMsg && loadingMsg.parentNode) {
+            loadingMsg.remove();
+        }
     }
 }
 
@@ -104,7 +191,7 @@ function addMessage(text, type) {
         messageDiv.innerHTML = `<strong>You:</strong> ${escapeHtml(text)}`;
     } else if (type === 'ai') {
         messageDiv.className += ' text-gray-700 dark:text-gray-300';
-        messageDiv.innerHTML = `<strong>Assistant:</strong> ${escapeHtml(text)}`;
+        messageDiv.innerHTML = `<strong>Assistant:</strong> <span class="answer-text">${escapeHtml(text)}</span>`;
     } else if (type === 'loading') {
         messageDiv.className += ' text-gray-500 dark:text-gray-500 italic';
         messageDiv.textContent = text;
@@ -116,6 +203,16 @@ function addMessage(text, type) {
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
     return messageDiv;
+}
+
+function updateMessage(messageDiv, text, type) {
+    const answerSpan = messageDiv.querySelector('.answer-text');
+    if (answerSpan) {
+        answerSpan.textContent = text;
+    } else {
+        messageDiv.innerHTML = `<strong>Assistant:</strong> <span class="answer-text">${escapeHtml(text)}</span>`;
+    }
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 function escapeHtml(text) {
@@ -190,6 +287,9 @@ function rotatePlaceholder() {
 }
 
 chatInput.addEventListener('input', () => {
+    const sanitized = sanitizeQuestion(chatInput.value.trim());
+    sendBtn.disabled = sanitized.length < 3;
+
     isTyping = chatInput.value.length > 0;
 });
 

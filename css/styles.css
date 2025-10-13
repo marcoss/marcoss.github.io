@@ -87,3 +87,11 @@ body {
         -webkit-text-size-adjust: 100%;
     }
 }
+
+.answer-text {
+    display: inline;
+}
+
+#chatMessages {
+    scroll-behavior: auto;
+}
