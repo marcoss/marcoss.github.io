@@ -287,9 +287,6 @@ function rotatePlaceholder() {
 }
 
 chatInput.addEventListener('input', () => {
-    const sanitized = sanitizeQuestion(chatInput.value.trim());
-    sendBtn.disabled = sanitized.length < 3;
-
     isTyping = chatInput.value.length > 0;
 });
 
