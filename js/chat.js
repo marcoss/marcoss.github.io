@@ -5,6 +5,26 @@ const supportsSSE = typeof EventSource !== 'undefined';
 
 let isLoading = false;
 
+function linkifyText(text) {
+    text = text.replace(/(https?:\/\/[^\s<]+)/g, (url) => {
+        let cleanUrl = url;
+        let trailingPunct = '';
+
+        if (url.match(/[.,;!?)]+$/)) {
+            trailingPunct = url.match(/[.,;!?)]+$/)[0];
+            cleanUrl = url.slice(0, -trailingPunct.length);
+        }
+
+        return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">${cleanUrl}</a>${trailingPunct}`;
+    });
+
+    text = text.replace(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g, (email) => {
+        return `<a href="mailto:${email}" class="text-blue-600 dark:text-blue-400 hover:underline">${email}</a>`;
+    });
+
+    return text;
+}
+
 async function signRequest(data) {
     const timestamp = Date.now().toString();
     const nonce = Math.random().toString(36).substring(7);
@@ -191,7 +211,8 @@ function addMessage(text, type) {
         messageDiv.innerHTML = `<strong>You:</strong> ${escapeHtml(text)}`;
     } else if (type === 'ai') {
         messageDiv.className += ' text-gray-700 dark:text-gray-300';
-        messageDiv.innerHTML = `<strong>Assistant:</strong> <span class="answer-text">${escapeHtml(text)}</span>`;
+        const processedText = linkifyText(escapeHtml(text));
+        messageDiv.innerHTML = `<strong>Assistant:</strong> <span class="answer-text">${processedText}</span>`;
     } else if (type === 'loading') {
         messageDiv.className += ' text-gray-500 dark:text-gray-500 italic';
         messageDiv.textContent = text;
@@ -207,10 +228,12 @@ function addMessage(text, type) {
 
 function updateMessage(messageDiv, text, type) {
     const answerSpan = messageDiv.querySelector('.answer-text');
+    const processedText = linkifyText(escapeHtml(text));
+
     if (answerSpan) {
-        answerSpan.textContent = text;
+        answerSpan.innerHTML = processedText;
     } else {
-        messageDiv.innerHTML = `<strong>Assistant:</strong> <span class="answer-text">${escapeHtml(text)}</span>`;
+        messageDiv.innerHTML = `<strong>Assistant:</strong> <span class="answer-text">${processedText}</span>`;
     }
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
