@@ -15,11 +15,11 @@ function linkifyText(text) {
             cleanUrl = url.slice(0, -trailingPunct.length);
         }
 
-        return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">${cleanUrl}</a>${trailingPunct}`;
+        return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="underline hover:text-blue-600 dark:hover:text-blue-400">${cleanUrl}</a>${trailingPunct}`;
     });
 
     text = text.replace(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g, (email) => {
-        return `<a href="mailto:${email}" class="text-blue-600 dark:text-blue-400 hover:underline">${email}</a>`;
+        return `<a href="mailto:${email}" class="underline hover:text-blue-600 dark:hover:text-blue-400">${email}</a>`;
     });
 
     return text;
