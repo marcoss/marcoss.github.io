@@ -28,7 +28,7 @@ function MessageComponent({ message }: MessageProps) {
   if (message.type === 'ai') {
     return (
       <div class="message text-base sm:text-base leading-relaxed text-gray-700 dark:text-gray-300">
-        <strong>Marcos's AI:</strong>{' '}
+        <strong>AI:</strong>{' '}
         <span class="answer-text">
           <Linkify options={linkifyOptions}>{message.text}</Linkify>
         </span>
