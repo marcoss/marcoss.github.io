@@ -4,8 +4,12 @@
 
 - Source code for [https://marcos.me](https://marcos.me)
 - Built with Preact + Tailwind CSS + Vite
-- Backend API service ([https://api.marcos.me](https://api.marcos.me)) (Not in this repo)
+- Backend API service calls [https://api.marcos.me/v1/chat](https://api.marcos.me/v1/chat) (source code coming soon)
 - Cloudflare for caching/serving
+
+## AI chatbot
+
+- Features a RAG-powered AI chatbot serving my personalized resume and project experience context into an LLM with streaming responses.
 
 ## Deployments
 
