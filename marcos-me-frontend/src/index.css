@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message {
+  animation: slideUp 0.25s ease-out;
+}
+
+.chat-input::placeholder {
+  transition: opacity 0.6s ease-in-out;
+}
+
+.chat-input.placeholder-fade-out::placeholder {
+  opacity: 0;
+}
+
+.chat-input.placeholder-fade-in::placeholder {
+  opacity: 1;
+}
+
+.chat-input::-webkit-input-placeholder {
+  transition: opacity 0.6s ease-in-out;
+}
+
+.chat-input.placeholder-fade-out::-webkit-input-placeholder {
+  opacity: 0;
+}
+
+.chat-input.placeholder-fade-in::-webkit-input-placeholder {
+  opacity: 1;
+}
+
+.chat-input::-moz-placeholder {
+  transition: opacity 0.6s ease-in-out;
+}
+
+.chat-input.placeholder-fade-out::-moz-placeholder {
+  opacity: 0;
+}
+
+.chat-input.placeholder-fade-in::-moz-placeholder {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  body {
+    -webkit-text-size-adjust: 100%;
+  }
+}
+
+.answer-text {
+  display: inline;
+}
+
+#chatMessages {
+  scroll-behavior: auto;
+}
