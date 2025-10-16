@@ -6,7 +6,7 @@ export async function signRequest(data: { question: string }): Promise<Signature
   const nonce = Math.random().toString(36).substring(7);
   const canonicalString = `${data.question}|${timestamp}|${nonce}`;
   const encoder = new TextEncoder();
-  const keyData = encoder.encode(API_CONFIG.apiKey);
+  const keyData = encoder.encode(API_CONFIG.appId);
   const messageData = encoder.encode(canonicalString);
 
   const key = await crypto.subtle.importKey(

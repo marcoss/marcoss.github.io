@@ -49,6 +49,6 @@ export const INITIAL_MESSAGE: Message = {
 
 export const API_CONFIG = {
   endpoint: 'https://api.marcos.me/v1/chat',
-  apiKey: 'e49cf0dc-35da-4eb6-abd0-6d81ef9ae5c8',
+  appId: 'e49cf0dc-35da-4eb6-abd0-6d81ef9ae5c8',
   supportsSSE: typeof EventSource !== 'undefined',
 } as const;
