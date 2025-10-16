@@ -19,14 +19,33 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm run build\
+
+      # Take screenshot of local build
+      - name: Install Playwright
+        run: |
+          npm install -D playwright-chromium
+          npx playwright install chromium
+
+      - name: Take Screenshot of Local Build
+        run: |
+          npx playwright screenshot \
+            --viewport-size 1920,1080 \
+            --wait-for-timeout 2000 \
+            file://$(pwd)/dist/index.html \
+            screenshot.png
+
+      - name: Save Screenshot
+        run: |
+          mkdir -p .github/assets
+          mv screenshot.png .github/assets/screenshot.png
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
