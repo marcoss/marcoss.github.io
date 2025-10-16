@@ -1,0 +1,11 @@
+name: Protect Main and GH-Pages Branches
+type: branch
+enforcement: active
+branches:
+  - name: main
+    delete:
+      allow: false
+  - name: gh-pages
+    delete:
+      allow: false
+bypass_actors: []
