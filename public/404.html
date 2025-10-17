@@ -4,14 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found | Marcos Castaneda</title>
-    <meta http-equiv="refresh" content="0; url=/" />
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="2; url=/" />
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #1a1a1a;
+                color: #e0e0e0;
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            body {
+                background: #ffffff;
+                color: #333;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <p>Redirecting to home page...</p>
+    <p>Redirecting...</p>
     <script>
-        window.location.href = '/';
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 2000);
     </script>
 </body>
 
