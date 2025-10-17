@@ -13,4 +13,4 @@
 
 ## Deployments
 
-- GitHub Actions CI pushes bundled code to `gh-pages` branch.
+- [GitHub Actions](https://github.com/marcoss/marcoss.github.io/actions/) CI builds and pushes build artifacts to GitHub Pages
