@@ -235,7 +235,7 @@ export function ChatSection() {
 
   return (
     <section>
-      <h2 class="text-xl sm:text-2xl font-semibold mb-5">💬 Ask Marcos's AI ✨</h2>
+      <h2 class="text-xl sm:text-2xl font-semibold mb-5">⚡️ Ask Marcos's AI</h2>
 
       <div
         ref={messagesRef}
