@@ -17,7 +17,7 @@
   "dependencies": {
     "linkify-react": "^4.3.2",
     "linkifyjs": "^4.3.2",
-    "preact": "^10.28.0"
+    "preact": "^10.28.2"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
