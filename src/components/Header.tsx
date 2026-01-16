@@ -40,7 +40,7 @@ export function Header() {
         </a>
         <span class="text-gray-400">•</span>
         <a
-          href="mailto:marcosjcastaneda@gmail.com"
+          href="mailto:hello@marcos.me"
           class="font-medium text-gray-900 dark:text-gray-100 hover:underline"
         >
           Email
