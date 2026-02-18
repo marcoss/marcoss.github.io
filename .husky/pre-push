@@ -1,6 +1,6 @@
 echo "🔍 Running pre-push validation..."
-npm run format:check
-npm run lint
-npx tsc --noEmit
-npm run build
+bun run format:check
+bun run lint
+bunx tsc --noEmit
+bun run build
 echo "✅ All checks passed!"

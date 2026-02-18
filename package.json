@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "npm run format:check && npm run lint",
+    "prebuild": "bun run format:check && bun run lint",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json}\" --ignore-path .prettierignore",

@@ -3,9 +3,16 @@
 # Personal Site
 
 - Source code for [https://marcos.me](https://marcos.me)
-- Built with Preact + Tailwind CSS + Vite
+- Built with Preact + Tailwind CSS + Vite + Bun
 - Backend API service calls [https://api.marcos.me/v1/chat](https://api.marcos.me/v1/chat) (source code coming soon)
 - Cloudflare for caching/serving
+
+## Development
+
+```bash
+bun run dev    # start dev server
+bun run build  # production build
+```
 
 ## AI chatbot
 
