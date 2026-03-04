@@ -8,7 +8,7 @@ export function Header() {
           class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover flex-shrink-0 border-2 border-gray-200 dark:border-gray-800"
         />
         <div class="flex-1 min-w-0">
-          <h1 class="text-3xl sm:text-4xl font-bold mb-2">Mark J. Castaneda</h1>
+          <h1 class="text-2xl sm:text-4xl font-bold mb-2">Mark J. Castaneda</h1>
           <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300">
             Senior Software Engineer
           </p>
