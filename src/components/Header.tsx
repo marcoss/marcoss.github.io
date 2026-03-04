@@ -16,8 +16,8 @@ export function Header() {
       </div>
 
       <p class="text-base sm:text-lg text-gray-500 dark:text-gray-300 mb-5 leading-relaxed">
-        Experienced Google/AWS engineer building scalable web applications, secure backend APIs and
-        distributed systems.
+        7+ years building scalable, reliable backend systems and customer-facing products at Google
+        and AWS, with a focus on cloud infrastructure, secure APIs, and distributed systems.
       </p>
 
       <div class="flex gap-4 text-base sm:text-lg">
