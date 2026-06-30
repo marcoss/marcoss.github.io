@@ -20,7 +20,7 @@ export function Header() {
         with a focus on cloud infrastructure, secure APIs, and distributed systems.
       </p>
 
-      <div class="flex gap-4 text-base sm:text-lg">
+      <div class="flex justify-center gap-4 text-base sm:text-lg">
         <a
           href="https://www.linkedin.com/in/mcasta"
           target="_blank"

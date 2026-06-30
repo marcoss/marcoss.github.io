@@ -3,8 +3,8 @@ import { ChatSection } from './components/ChatSection';
 
 export function App() {
   return (
-    <div class="bg-neutral-50 dark:bg-neutral-900 text-gray-900 dark:text-gray-100 p-6 sm:p-12 md:p-12 min-h-screen">
-      <div class="max-w-2xl mx-auto space-y-8 fade-in">
+    <div class="min-h-dvh overflow-x-hidden bg-neutral-50 px-4 py-5 text-gray-900 dark:bg-neutral-900 dark:text-gray-100 sm:p-12">
+      <div class="mx-auto max-w-2xl space-y-6 fade-in sm:space-y-8">
         <Header />
         <hr class="border-gray-300 dark:border-gray-700" />
         <ChatSection />
