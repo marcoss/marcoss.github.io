@@ -34,7 +34,6 @@ function MessageComponent({ message }: MessageProps) {
     return (
       <div class="message text-base sm:text-base leading-relaxed text-gray-700 dark:text-gray-300">
         <div>
-          <strong>AI:</strong>{' '}
           <span class="answer-text">
             <Linkify options={linkifyOptions}>{message.text}</Linkify>
           </span>
@@ -322,7 +321,7 @@ export function ChatSection() {
       </div>
 
       <p class="text-xs sm:text-sm text-gray-400 dark:text-gray-600 mt-5 text-center">
-        AI may provide inaccurate information.
+        web {__BUILD_TAG__}
       </p>
     </section>
   );
