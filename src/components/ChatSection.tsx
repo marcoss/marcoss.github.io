@@ -25,7 +25,7 @@ function MessageComponent({ message }: MessageProps) {
   if (message.type === 'user') {
     return (
       <div class="message flex justify-end">
-        <div class="max-w-[92%] overflow-hidden rounded bg-gray-900 px-3.5 py-2.5 text-sm leading-relaxed font-medium whitespace-pre-wrap text-white [overflow-wrap:anywhere] dark:bg-gray-100 dark:text-gray-950 sm:max-w-[85%] sm:px-4 sm:text-base">
+        <div class="max-w-[92%] overflow-hidden rounded-2xl bg-gray-900 px-3.5 py-2.5 text-sm leading-relaxed font-medium whitespace-pre-wrap text-white [overflow-wrap:anywhere] dark:bg-gray-100 dark:text-gray-950 sm:max-w-[85%] sm:px-4 sm:text-base">
           {message.text}
         </div>
       </div>
@@ -35,7 +35,7 @@ function MessageComponent({ message }: MessageProps) {
   if (message.type === 'ai') {
     return (
       <div class="message flex flex-col items-start">
-        <div class="max-w-[94%] overflow-hidden rounded border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap text-gray-700 [overflow-wrap:anywhere] dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300 sm:max-w-[90%] sm:px-4 sm:text-base">
+        <div class="max-w-[94%] overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap text-gray-700 [overflow-wrap:anywhere] dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300 sm:max-w-[90%] sm:px-4 sm:text-base">
           <span class="answer-text">
             <Linkify options={linkifyOptions}>{message.text}</Linkify>
           </span>
@@ -52,7 +52,7 @@ function MessageComponent({ message }: MessageProps) {
   if (message.type === 'loading') {
     return (
       <div class="message flex items-start" role="status" aria-live="polite">
-        <div class="inline-flex items-center gap-1 rounded border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm leading-relaxed text-gray-500 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-500 sm:px-4 sm:text-base">
+        <div class="inline-flex items-center gap-1 rounded-2xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm leading-relaxed text-gray-500 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-500 sm:px-4 sm:text-base">
           <span>Thinking</span>
           <span class="flex gap-1" aria-hidden="true">
             <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.2s]" />
@@ -67,7 +67,7 @@ function MessageComponent({ message }: MessageProps) {
   if (message.type === 'error') {
     return (
       <div class="message flex items-start">
-        <div class="max-w-[94%] overflow-hidden rounded border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap text-red-700 [overflow-wrap:anywhere] dark:border-red-900 dark:bg-red-950/40 dark:text-red-400 sm:max-w-[90%] sm:px-4 sm:text-base">
+        <div class="max-w-[94%] overflow-hidden rounded-2xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap text-red-700 [overflow-wrap:anywhere] dark:border-red-900 dark:bg-red-950/40 dark:text-red-400 sm:max-w-[90%] sm:px-4 sm:text-base">
           <strong>Error:</strong> {message.text}
         </div>
       </div>
@@ -85,7 +85,7 @@ export function ChatSection() {
   const [placeholderIndex, setPlaceholderIndex] = useState<number>(0);
   const [placeholderFade, setPlaceholderFade] = useState<string>('');
   const messagesRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const focusInputIfDesktop = (): void => {
     if (!inputRef.current) return;
@@ -294,14 +294,14 @@ export function ChatSection() {
     }
   };
 
-  const handleKeyDown = (e: TargetedKeyboardEvent<HTMLTextAreaElement>): void => {
-    if (e.key === 'Enter' && !e.shiftKey && !isLoading) {
+  const handleKeyDown = (e: TargetedKeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter' && !isLoading) {
       e.preventDefault();
       sendMessage();
     }
   };
 
-  const handleInput = (e: TargetedInputEvent<HTMLTextAreaElement>): void => {
+  const handleInput = (e: TargetedInputEvent<HTMLInputElement>): void => {
     setInput(e.currentTarget.value);
   };
 
@@ -317,21 +317,21 @@ export function ChatSection() {
       </div>
 
       <div class="sticky bottom-0 z-10 -mx-4 flex flex-col gap-3 bg-neutral-50 px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] dark:bg-neutral-900 sm:static sm:z-auto sm:mx-0 sm:flex-row sm:items-end sm:bg-transparent sm:p-0 sm:dark:bg-transparent">
-        <textarea
+        <input
           ref={inputRef}
+          type="text"
           value={input}
           onInput={handleInput}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           minLength={3}
           maxLength={200}
-          rows={1}
-          class={`chat-input min-h-12 flex-1 resize-none rounded border border-gray-300 bg-white px-4 py-3 text-base leading-6 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-gray-900 focus:outline-none dark:border-gray-700 dark:bg-black dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-gray-100 sm:min-h-11 sm:py-2.5 ${placeholderFade}`}
+          class={`chat-input min-h-12 flex-1 rounded-2xl border border-gray-300 bg-white px-4 py-3 text-base leading-6 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-gray-900 focus:outline-none dark:border-gray-700 dark:bg-black dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-gray-100 sm:min-h-11 sm:py-2.5 ${placeholderFade}`}
         />
         <button
           onClick={sendMessage}
           disabled={isLoading}
-          class="min-h-12 rounded bg-gray-900 px-6 py-3 text-base font-medium whitespace-nowrap text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-black dark:hover:bg-gray-200 sm:min-h-11 sm:py-2.5"
+          class="min-h-12 rounded-full bg-gray-900 px-6 py-3 text-base font-medium whitespace-nowrap text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-black dark:hover:bg-gray-200 sm:min-h-11 sm:py-2.5"
         >
           Chat
         </button>
