@@ -321,7 +321,7 @@ export function ChatSection() {
       </div>
 
       <p class="text-xs sm:text-sm text-gray-400 dark:text-gray-600 mt-5 text-center">
-        web {__BUILD_TAG__}
+        build {__BUILD_TAG__}
       </p>
     </section>
   );
