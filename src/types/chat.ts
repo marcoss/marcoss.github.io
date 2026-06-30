@@ -1,6 +1,16 @@
+export interface ChatStats {
+  model: string;
+  modelLabel: string;
+  duration: number;
+  retrievalTime?: number;
+  llmTime?: number;
+  cached?: boolean;
+}
+
 export interface Message {
   type: 'user' | 'ai' | 'loading' | 'error';
   text: string;
+  stats?: ChatStats;
 }
 
 export interface SignatureResponse {
@@ -16,12 +26,18 @@ export interface ChatRequest {
 
 export interface ChatResponse {
   answer: string;
+  model?: string;
+  modelLabel?: string;
+  duration?: number;
+  stats?: ChatStats;
 }
 
 export interface StreamChunk {
   content?: string;
   chunks?: number;
-  retrievalTime?: string;
+  retrievalTime?: number;
+  model?: string;
+  modelLabel?: string;
 }
 
 export interface ErrorData {

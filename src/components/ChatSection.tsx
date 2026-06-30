@@ -1,13 +1,18 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
 import Linkify from 'linkify-react';
 import type { JSX } from 'preact';
-import type { Message, StreamChunk } from '../types/chat';
+import type { ChatResponse, ChatStats, Message, StreamChunk } from '../types/chat';
 import { PLACEHOLDERS, INITIAL_MESSAGE } from '../constants/chatConstants';
 import { sendChatRequest } from '../services/chatService';
 import { sanitizeQuestion, formatErrorMessage } from '../utils/textUtils';
 
 interface MessageProps {
   message: Message;
+}
+
+function formatStats(stats: ChatStats): string {
+  const seconds = (stats.duration / 1000).toFixed(1);
+  return `${stats.modelLabel} · ${seconds}s${stats.cached ? ' · cached' : ''}`;
 }
 
 function MessageComponent({ message }: MessageProps) {
@@ -28,10 +33,17 @@ function MessageComponent({ message }: MessageProps) {
   if (message.type === 'ai') {
     return (
       <div class="message text-base sm:text-base leading-relaxed text-gray-700 dark:text-gray-300">
-        <strong>AI:</strong>{' '}
-        <span class="answer-text">
-          <Linkify options={linkifyOptions}>{message.text}</Linkify>
-        </span>
+        <div>
+          <strong>AI:</strong>{' '}
+          <span class="answer-text">
+            <Linkify options={linkifyOptions}>{message.text}</Linkify>
+          </span>
+        </div>
+        {message.stats && (
+          <div class="mt-1 inline-flex items-center rounded-full border border-gray-200 px-2 py-0.5 text-[11px] leading-4 text-gray-500 dark:border-gray-800 dark:text-gray-500">
+            {formatStats(message.stats)}
+          </div>
+        )}
       </div>
     );
   }
@@ -106,6 +118,21 @@ export function ChatSection() {
     let buffer = '';
     let answer = '';
     let messageIndex: number | null = null;
+    let currentEvent = 'message';
+
+    const updateLatestAiStats = (stats: ChatStats): void => {
+      setMessages(prev => {
+        const newMessages = [...prev];
+        const lastIndex = newMessages.length - 1;
+        if (lastIndex >= 0 && newMessages[lastIndex].type === 'ai') {
+          newMessages[lastIndex] = {
+            ...newMessages[lastIndex],
+            stats,
+          };
+        }
+        return newMessages;
+      });
+    };
 
     try {
       while (true) {
@@ -117,45 +144,62 @@ export function ChatSection() {
         buffer = lines.pop() || '';
 
         for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6);
-            if (data) {
-              try {
-                const parsed: StreamChunk = JSON.parse(data);
-                if (parsed.content) {
-                  if (messageIndex === null) {
-                    setMessages(prev => {
-                      const newMessages = prev.filter(m => m.type !== 'loading');
-                      return [...newMessages, { type: 'ai', text: parsed.content || '' }];
-                    });
-                    messageIndex = 0;
-                    answer = parsed.content;
-                  } else {
-                    answer += parsed.content;
-                    setMessages(prev => {
-                      const newMessages = [...prev];
-                      newMessages[newMessages.length - 1] = {
-                        type: 'ai',
-                        text: answer,
-                      };
-                      return newMessages;
-                    });
-                  }
-                }
-                if (parsed.chunks !== undefined) {
-                  console.log(`Retrieved ${parsed.chunks} chunks in ${parsed.retrievalTime}ms`);
-                }
-              } catch {
-                // Ignore
-              }
-            }
-          } else if (line.startsWith('event: ')) {
-            const eventType = line.slice(7);
-            if (eventType === 'done') {
+          if (line.startsWith('event: ')) {
+            currentEvent = line.slice(7);
+            if (currentEvent === 'done') {
               console.log('Stream completed');
-            } else if (eventType === 'error') {
+            }
+            continue;
+          }
+
+          if (!line.startsWith('data: ')) continue;
+
+          const data = line.slice(6);
+          if (!data) {
+            currentEvent = 'message';
+            continue;
+          }
+
+          try {
+            if (currentEvent === 'stats') {
+              updateLatestAiStats(JSON.parse(data) as ChatStats);
+              currentEvent = 'message';
+              continue;
+            }
+
+            if (currentEvent === 'error') {
               throw new Error('Server error during streaming');
             }
+
+            const parsed: StreamChunk = JSON.parse(data);
+            if (parsed.content) {
+              if (messageIndex === null) {
+                setMessages(prev => {
+                  const newMessages = prev.filter(m => m.type !== 'loading');
+                  return [...newMessages, { type: 'ai', text: parsed.content || '' }];
+                });
+                messageIndex = 0;
+                answer = parsed.content;
+              } else {
+                answer += parsed.content;
+                setMessages(prev => {
+                  const newMessages = [...prev];
+                  newMessages[newMessages.length - 1] = {
+                    ...newMessages[newMessages.length - 1],
+                    type: 'ai',
+                    text: answer,
+                  };
+                  return newMessages;
+                });
+              }
+            }
+            if (parsed.chunks !== undefined) {
+              console.log(`Retrieved ${parsed.chunks} chunks in ${parsed.retrievalTime}ms`);
+            }
+          } catch (error) {
+            if (currentEvent === 'error') throw error;
+          } finally {
+            currentEvent = 'message';
           }
         }
       }
@@ -197,10 +241,20 @@ export function ChatSection() {
       if (contentType && contentType.includes('text/event-stream')) {
         await handleStreamingResponse(response);
       } else {
-        const data = await response.json();
+        const data = (await response.json()) as ChatResponse;
+        const stats =
+          data.stats ||
+          (data.model && data.modelLabel && data.duration !== undefined
+            ? {
+                model: data.model,
+                modelLabel: data.modelLabel,
+                duration: data.duration,
+                cached: false,
+              }
+            : undefined);
         setMessages(prev => {
           const filtered = prev.filter(m => m.type !== 'loading');
-          return [...filtered, { type: 'ai', text: data.answer }];
+          return [...filtered, { type: 'ai', text: data.answer, stats }];
         });
       }
     } catch (error) {

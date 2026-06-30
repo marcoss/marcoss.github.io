@@ -44,7 +44,7 @@ export const PLACEHOLDERS: string[] = [
 
 export const INITIAL_MESSAGE: Message = {
   type: 'ai',
-  text: "👋 Hi! I'm a RAG-based AI assistant trained on Marcos's technical experience and work history. Ask me anything about his skills, projects, or background.",
+  text: "👋 Hi! I'm an AI assistant built around Marcos’s resume and technical background. Ask about his skills, projects, experience, or work history.",
 };
 
 export const API_CONFIG = {
