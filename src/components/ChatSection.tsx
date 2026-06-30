@@ -333,7 +333,7 @@ export function ChatSection() {
           disabled={isLoading}
           class="min-h-12 rounded-full bg-gray-900 px-6 py-3 text-base font-medium whitespace-nowrap text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-black dark:hover:bg-gray-200 sm:min-h-11 sm:py-2.5"
         >
-          Chat
+          Ask
         </button>
       </div>
 
