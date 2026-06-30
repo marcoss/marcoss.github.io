@@ -24,22 +24,24 @@ function MessageComponent({ message }: MessageProps) {
 
   if (message.type === 'user') {
     return (
-      <div class="message text-base sm:text-base leading-relaxed font-medium text-gray-900 dark:text-gray-100">
-        <strong>You:</strong> {message.text}
+      <div class="message flex justify-end">
+        <div class="max-w-[85%] rounded bg-gray-900 px-4 py-2.5 text-base leading-relaxed font-medium text-white dark:bg-gray-100 dark:text-gray-950 sm:text-base">
+          {message.text}
+        </div>
       </div>
     );
   }
 
   if (message.type === 'ai') {
     return (
-      <div class="message text-base sm:text-base leading-relaxed text-gray-700 dark:text-gray-300">
-        <div>
+      <div class="message flex flex-col items-start">
+        <div class="max-w-[90%] rounded border border-gray-200 bg-gray-50 px-4 py-2.5 text-base leading-relaxed text-gray-700 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300 sm:text-base">
           <span class="answer-text">
             <Linkify options={linkifyOptions}>{message.text}</Linkify>
           </span>
         </div>
         {message.stats && (
-          <div class="mt-1 inline-flex items-center rounded-full border border-gray-200 px-2 py-0.5 text-[11px] leading-4 text-gray-500 dark:border-gray-800 dark:text-gray-500">
+          <div class="mt-1 ml-1 inline-flex items-center rounded-full border border-gray-200 px-2 py-0.5 text-[11px] leading-4 text-gray-500 dark:border-gray-800 dark:text-gray-500">
             {formatStats(message.stats)}
           </div>
         )}
@@ -49,20 +51,25 @@ function MessageComponent({ message }: MessageProps) {
 
   if (message.type === 'loading') {
     return (
-      <div
-        class="message text-base sm:text-base leading-relaxed text-gray-500 dark:text-gray-500 italic"
-        role="status"
-        aria-live="polite"
-      >
-        {message.text}
+      <div class="message flex items-start" role="status" aria-live="polite">
+        <div class="inline-flex items-center gap-1 rounded border border-gray-200 bg-gray-50 px-4 py-2.5 text-base leading-relaxed text-gray-500 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-500 sm:text-base">
+          <span>Thinking</span>
+          <span class="flex gap-1" aria-hidden="true">
+            <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.2s]" />
+            <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.1s]" />
+            <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-current" />
+          </span>
+        </div>
       </div>
     );
   }
 
   if (message.type === 'error') {
     return (
-      <div class="message text-base sm:text-base leading-relaxed text-red-600 dark:text-red-400">
-        <strong>Error:</strong> {message.text}
+      <div class="message flex items-start">
+        <div class="max-w-[90%] rounded border border-red-200 bg-red-50 px-4 py-2.5 text-base leading-relaxed text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-400">
+          <strong>Error:</strong> {message.text}
+        </div>
       </div>
     );
   }
@@ -290,10 +297,7 @@ export function ChatSection() {
     <section>
       <h2 class="text-xl sm:text-2xl font-semibold mb-5">💬 Ask My AI</h2>
 
-      <div
-        ref={messagesRef}
-        class="space-y-4 mb-5 max-h-[500px] overflow-y-auto p-4 border border-gray-200 dark:border-gray-800 rounded"
-      >
+      <div ref={messagesRef} class="space-y-4 mb-5 max-h-[500px] overflow-y-auto py-2 pr-1">
         {messages.map((message, index) => (
           <MessageComponent key={index} message={message} />
         ))}
@@ -320,8 +324,8 @@ export function ChatSection() {
         </button>
       </div>
 
-      <p class="text-xs sm:text-sm text-gray-400 dark:text-gray-600 mt-5 text-center">
-        build {__BUILD_TAG__}
+      <p class="mt-8 pt-2 text-center text-xs text-gray-300 dark:text-gray-700 sm:text-sm">
+        {__BUILD_TAG__}
       </p>
     </section>
   );
