@@ -1,4 +1,5 @@
 export interface ChatStats {
+  conversation_id?: string;
   model: string;
   modelLabel: string;
   duration: number;
@@ -22,9 +23,11 @@ export interface SignatureResponse {
 export interface ChatRequest {
   question: string;
   stream: boolean;
+  conversation_id?: string;
 }
 
 export interface ChatResponse {
+  conversation_id: string;
   answer: string;
   model?: string;
   modelLabel?: string;
@@ -33,6 +36,7 @@ export interface ChatResponse {
 }
 
 export interface StreamChunk {
+  conversation_id?: string;
   content?: string;
   chunks?: number;
   retrievalTime?: number;

@@ -86,6 +86,7 @@ export function ChatSection() {
   const [placeholderFade, setPlaceholderFade] = useState<string>('');
   const messagesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const conversationIdRef = useRef<string | undefined>(undefined);
 
   const focusInputIfDesktop = (): void => {
     if (!inputRef.current) return;
@@ -181,7 +182,11 @@ export function ChatSection() {
 
           try {
             if (currentEvent === 'stats') {
-              updateLatestAiStats(JSON.parse(data) as ChatStats);
+              const stats = JSON.parse(data) as ChatStats;
+              if (stats.conversation_id) {
+                conversationIdRef.current = stats.conversation_id;
+              }
+              updateLatestAiStats(stats);
               currentEvent = 'message';
               continue;
             }
@@ -191,6 +196,9 @@ export function ChatSection() {
             }
 
             const parsed: StreamChunk = JSON.parse(data);
+            if (parsed.conversation_id) {
+              conversationIdRef.current = parsed.conversation_id;
+            }
             if (parsed.content) {
               if (messageIndex === null) {
                 setMessages(prev => {
@@ -244,7 +252,7 @@ export function ChatSection() {
     setMessages(prev => [...prev, { type: 'loading', text: 'Thinking...' }]);
 
     try {
-      const response = await sendChatRequest(question);
+      const response = await sendChatRequest(question, conversationIdRef.current);
 
       if (!response.ok) {
         const data = await response.json();
@@ -261,6 +269,7 @@ export function ChatSection() {
         await handleStreamingResponse(response);
       } else {
         const data = (await response.json()) as ChatResponse;
+        conversationIdRef.current = data.conversation_id;
         const stats =
           data.stats ||
           (data.model && data.modelLabel && data.duration !== undefined

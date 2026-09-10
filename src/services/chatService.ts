@@ -25,7 +25,10 @@ export async function signRequest(data: { question: string }): Promise<Signature
   return { signature: signatureHex, timestamp, nonce };
 }
 
-export async function sendChatRequest(question: string): Promise<Response> {
+export async function sendChatRequest(
+  question: string,
+  conversationId?: string
+): Promise<Response> {
   const { signature, timestamp, nonce } = await signRequest({ question });
 
   return fetch(API_CONFIG.endpoint, {
@@ -39,6 +42,7 @@ export async function sendChatRequest(question: string): Promise<Response> {
     body: JSON.stringify({
       question,
       stream: API_CONFIG.supportsSSE,
+      conversation_id: conversationId,
     } as ChatRequest),
   });
 }
